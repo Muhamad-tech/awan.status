@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Awan · Version 1 · Project status</title>
+<style>
+  :root{--ink:#0f172a;--muted:#64748b;--line:#e2e8f0;--bg:#f8fafc;--card:#fff;--blue:#2563eb;--green:#16a34a;--amber:#d97706;--red:#dc2626;--gray:#94a3b8;--violet:#7c3aed}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",sans-serif;color:var(--ink);background:var(--bg)}
+  .wrap{max-width:1180px;margin:0 auto;padding:28px 20px 48px}
+  header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:22px}
+  h1{font-size:26px;margin:0}
+  h2{font-size:18px;margin:0 0 12px}
+  .sub{color:var(--muted);margin-top:4px}
+  .updated{font-size:13px;color:var(--muted);text-align:right}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:6px;vertical-align:middle}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-bottom:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .label{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:6px}
+  .big{font-size:28px;font-weight:700;line-height:1.1}
+  .small{font-size:13px;color:var(--muted)}
+  .bar{height:8px;background:#eef2f7;border-radius:99px;overflow:hidden;margin-top:10px}
+  .bar>i{display:block;height:100%;background:var(--blue);border-radius:99px}
+  .badge{display:inline-block;font-size:12px;font-weight:600;padding:2px 9px;border-radius:99px;white-space:nowrap}
+  .s-done{background:#dcfce7;color:#166534}.s-prog{background:#dbeafe;color:#1e40af}.s-late{background:#fee2e2;color:#991b1b}.s-not{background:#f1f5f9;color:#475569}
+  section{margin-top:18px}
+  .actions li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line)}
+  .actions li:first-child{border-top:0}
+  ul{list-style:none;margin:0;padding:0}
+  .due{font-size:13px;white-space:nowrap;font-weight:600}
+  .overdue{color:var(--red)}.soon{color:var(--amber)}.later{color:var(--muted)}
+  .note{font-size:13px;color:var(--muted)}
+  /* Gantt */
+  .gantt{overflow-x:auto}
+  .g{min-width:980px;position:relative}
+  .g-row{display:flex;align-items:center;min-height:30px}
+  .g-name{width:230px;flex:none;font-size:13px;padding-right:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .g-track{position:relative;flex:1;height:30px}
+  .g-sec{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:12px 0 4px;border-top:1px solid var(--line)}
+  .g-head{position:relative;height:24px;flex:1;font-size:12px;color:var(--muted)}
+  .g-month{position:absolute;top:0;border-left:1px solid var(--line);padding-left:5px;height:100%}
+  .g-grid{position:absolute;top:24px;bottom:0;border-left:1px dashed #edf1f6}
+  .g-bar{position:absolute;top:7px;height:16px;border-radius:6px;overflow:hidden;background:#cbd5e1}
+  .g-bar>i{position:absolute;left:0;top:0;bottom:0;background:rgba(15,23,42,.28)}
+  .g-dia{position:absolute;top:9px;width:12px;height:12px;transform:translateX(-6px) rotate(45deg);border-radius:2px}
+  .g-today{position:absolute;top:24px;bottom:0;width:2px;background:var(--red);z-index:2}
+  .g-today span{position:absolute;top:28px;left:4px;background:#fff;padding:0 3px;font-size:11px;color:var(--red);font-weight:700;white-space:nowrap}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--muted);margin-top:10px}
+  .legend b{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:-2px}
+  /* milestones */
+  .ms{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+  .ms h3{margin:0;font-size:16px}
+  .ms .top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+  .feat{display:grid;grid-template-columns:1fr 90px 44px;gap:8px;align-items:center;font-size:13px;padding:6px 0;border-top:1px solid var(--line)}
+  .feat .bar{margin:0;height:6px}
+  .pct{text-align:right;color:var(--muted);font-variant-numeric:tabular-nums}
+  footer{margin-top:28px;font-size:13px;color:var(--muted)}
+  .err{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;padding:14px;border-radius:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1 id="title">Awan · Version 1</h1>
+      <div class="sub" id="subtitle">Project status</div>
+    </div>
+    <div class="updated" id="updated"></div>
+  </header>
+  <div id="app"><div class="card">Loading…</div></div>
+  <footer>
+    This page updates itself from the team's plan. Dates follow the agreed plan. If a date moves, the team tells you within 2 working days, with the reason and the new date.
+  </footer>
+</div>
+<script>
+const COLORS=["#2563eb","#16a34a","#7c3aed","#ea580c","#dc2626","#92400e","#94a3b8"];
+const DAY=86400000;
+const d=s=>{const [y,m,dd]=s.split("-").map(Number);return new Date(y,m-1,dd)};
+const today=(()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())})();
+const fmt=(s,o={day:"numeric",month:"short",year:"numeric"})=>d(s).toLocaleDateString("en-GB",o);
+const range=(a,b)=>a===b?fmt(a):fmt(a,{day:"numeric",month:"short"})+" – "+fmt(b);
+const days=s=>Math.round((d(s)-today)/DAY);
+const rel=s=>{const n=days(s);return n===0?"today":n===1?"tomorrow":n===-1?"yesterday":n>0?`in ${n} days`:`${-n} days ago`};
+const pct=p=>p==null?"—":Math.round(p*100)+"%";
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const badge=s=>`<span class="badge ${s==="Done"?"s-done":s==="Late"?"s-late":s==="In progress"?"s-prog":"s-not"}">${esc(s)}</span>`;
+const bar=(p,c)=>`<div class="bar"><i style="width:${Math.round((p||0)*100)}%;${c?`background:${c}`:""}"></i></div>`;
+
+function render(data){
+  const {milestones:M,features:F,items:I,overall:O,project:P}=data;
+  if(P.client) document.getElementById("subtitle").textContent=`Project status for ${P.client}`;
+  const g=new Date(data.generatedAt);
+  document.getElementById("updated").innerHTML=`<span class="dot"></span>Updated ${g.toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}<br>Refreshes every ${P.refreshMinutes} minutes`;
+
+  const build=M.filter(m=>m.stories);
+  const current=build.find(m=>d(m.start)<=today&&today<=d(m.end))||M.find(m=>d(m.end)>=today)||M[M.length-1];
+  const demos=I.filter(i=>/demo|tester build/i.test(i.name));
+  const nextDemo=demos.find(i=>d(i.start)>=today);
+  const release=I.find(i=>/first tester build/i.test(i.name));
+  const handover=I.find(i=>/final handover/i.test(i.name));
+
+  const cards=`<div class="grid">
+    <div class="card"><div class="label">Overall progress</div><div class="big">${pct(O.progress)}</div>
+      <div class="small">${O.done} of ${O.total} user stories done</div>${bar(O.progress)}</div>
+    <div class="card"><div class="label">Current milestone</div><div style="font-weight:700;font-size:17px">${esc(current.name)}</div>
+      <div class="small">${range(current.start,current.end)} · ends ${rel(current.end)}</div>
+      <div style="margin-top:8px">${badge(current.status)} <span class="small">${pct(current.progress)} done</span></div>${current.progress!=null?bar(current.progress):""}</div>
+    <div class="card"><div class="label">Next demo</div>${nextDemo?`<div class="big">${fmt(nextDemo.start,{day:"numeric",month:"short"})}</div><div class="small">${esc(nextDemo.name)} · ${rel(nextDemo.start)}</div>`:`<div class="small">No demo planned</div>`}</div>
+    <div class="card"><div class="label">First tester build</div>${release?`<div class="big">${fmt(release.start,{day:"numeric",month:"short"})}</div><div class="small">${fmt(release.start)} · ${rel(release.start)}</div>`:""}${handover?`<div class="small" style="margin-top:6px">Final handover: ${fmt(handover.start)}</div>`:""}</div>
+  </div>`;
+
+  const mine=I.filter(i=>i.who==="client"&&i.status!=="Done"&&(i.type==="Client task"||(i.type==="Client review"&&d(i.start)<=addDays(today,7))));
+  const actions=`<section class="card"><h2>What we need from you</h2>${mine.length?`<ul class="actions">${mine.map(i=>{const n=days(i.end);const cls=n<0?"overdue":n<=7?"soon":"later";
+    return `<li><div><div>${esc(i.name)}</div>${i.notes?`<div class="note">${esc(i.notes)}</div>`:""}</div><div class="due ${cls}">${n<0?"Overdue · ":""}${i.type==="Client review"?range(i.start,i.end):fmt(i.end)}<div class="note" style="text-align:right">${rel(i.end)}</div></div></li>`}).join("")}</ul>`:`<div class="small">Nothing right now. Thank you!</div>`}</section>`;
+
+  // Gantt
+  const all=[...M,...I];
+  const min=d(all.reduce((a,x)=>x.start<a?x.start:a,all[0].start));
+  const max=d(all.reduce((a,x)=>x.end>a?x.end:a,all[0].end));
+  const span=(max-min)/DAY+1;
+  const L=s=>((d(s)-min)/DAY)/span*100;
+  const W=(a,b)=>((d(b)-d(a))/DAY+1)/span*100;
+  let months="",grid="";
+  for(let m=new Date(min.getFullYear(),min.getMonth(),1);m<=max;m=new Date(m.getFullYear(),m.getMonth()+1,1)){
+    const iso=`${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,"0")}-01`;
+    const left=Math.max(0,L(iso));
+    months+=`<div class="g-month" style="left:${left}%">${m.toLocaleDateString("en-GB",{month:"short",year:m.getMonth()===0||m<=min?"numeric":undefined})}</div>`;
+  }
+  const todayPct=((today-min)/DAY)/span*100;
+  const tip=x=>esc(`${x.name}\n${range(x.start,x.end)} · ${x.status}${x.progress!=null&&x.progress!==undefined?` · ${pct(x.progress)} done`:""}`);
+  const row=(name,inner)=>`<div class="g-row"><div class="g-name" title="${esc(name)}">${esc(name)}</div><div class="g-track">${inner}</div></div>`;
+  const barEl=(x,c)=>`<div class="g-bar" title="${tip(x)}" style="left:${L(x.start)}%;width:${W(x.start,x.end)}%;background:${c}">${x.progress?`<i style="width:${Math.round(x.progress*100)}%"></i>`:""}</div>`;
+  const dia=(x,c)=>`<div class="g-dia" title="${tip(x)}" style="left:${L(x.start)+W(x.start,x.start)/2}%;background:${c}"></div>`;
+  const sec=t=>`<div class="g-sec">${t}</div>`;
+  const doneC="#16a34a";
+  let gantt=`<div class="g">`+
+    `<div class="g-row"><div class="g-name"></div><div class="g-head">${months}</div></div>`+
+    sec("Milestones")+M.map((m,i)=>row(m.name,barEl(m,m.status==="Done"?doneC:COLORS[i%COLORS.length]))).join("")+
+    sec("Demos and key dates")+row("Demos and builds",I.filter(i=>i.who==="team").map(i=>dia(i,i.status==="Done"?doneC:"#0f172a")).join(""))+
+    sec("Your reviews")+I.filter(i=>i.type==="Client review").map(i=>row(i.name.replace(/ \(5 working days\)/,""),barEl(i,i.status==="Done"?doneC:"#f59e0b"))).join("")+
+    sec("Your tasks")+I.filter(i=>i.type==="Client task").map(i=>row(i.name,dia(i,i.status==="Done"?doneC:(d(i.end)<today?"#dc2626":"#ea580c")))).join("");
+  gantt+=`<div class="g-today" style="left:calc(230px + (100% - 230px) * ${todayPct/100})"><span>Today</span></div></div>`;
+  const ganttCard=`<section class="card"><h2>Plan</h2><div class="gantt">${todayPct<0||todayPct>100?gantt.replace(/<div class="g-today"[\s\S]*?<\/div><\/div>$/,"</div>"):gantt}</div>
+    <div class="legend"><span><b style="background:#2563eb"></b>Milestone (dark part = done)</span><span><b style="background:#f59e0b"></b>Your review</span><span><b style="background:#ea580c"></b>Your task</span><span><b style="background:#0f172a"></b>Demo or key date</span><span><b style="background:#16a34a"></b>Done</span><span><b style="background:#dc2626"></b>Overdue / today</span></div></section>`;
+
+  // Milestone cards
+  const msCards=`<section><h2>Milestones</h2><div class="ms">${M.map(m=>{const fs=F.filter(f=>f.milestone===m.key);
+    return `<div class="card"><div class="top"><div><h3>${esc(m.name)}</h3><div class="small">${range(m.start,m.end)}</div></div>${badge(m.status)}</div>
+    ${m.progress!=null?`${bar(m.progress)}<div class="small" style="margin-top:4px">${pct(m.progress)} of ${m.stories} user stories done</div>`:`<div class="small" style="margin-top:8px">${esc(m.notes)}</div>`}
+    ${fs.length?`<div style="margin-top:10px">${fs.map(f=>`<div class="feat"><div>${esc(f.name)}</div>${bar(f.progress,f.status==="Done"?"#16a34a":"")}<div class="pct">${pct(f.progress)}</div></div>`).join("")}</div>`:""}
+    </div>`}).join("")}</div></section>`;
+
+  document.getElementById("app").innerHTML=cards+actions+`<section>${ganttCard}</section>`+msCards;
+}
+function addDays(x,n){return new Date(x.getTime()+n*DAY)}
+fetch("data.json?t="+Date.now()).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(render)
+  .catch(e=>{document.getElementById("app").innerHTML=`<div class="err">The status data could not be loaded (${esc(e.message)}). Please try again in a few minutes.</div>`});
+</script>
+</body>
+</html>
