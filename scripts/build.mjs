@@ -5,10 +5,12 @@ import { mkdirSync, writeFileSync } from "node:fs";
 
 const TOKEN = process.env.NOTION_TOKEN;
 const DATA_SOURCE = process.env.TIMELINE_DATA_SOURCE_ID || "11518589-e176-429d-908d-ab949f0c5845";
-if (!TOKEN) {
-  console.error("NOTION_TOKEN is missing. Add it under Settings → Secrets and variables → Actions.");
+// Errors are printed as GitHub annotations so they show on the run's summary page.
+function fail(title, message) {
+  console.log(`::error title=${title}::${message}`);
   process.exit(1);
 }
+if (!TOKEN) fail("NOTION_TOKEN missing", "Add the secret under Settings → Secrets and variables → Actions → Repository secrets, named exactly NOTION_TOKEN.");
 
 async function notion(path, body) {
   const res = await fetch(`https://api.notion.com${path}`, {
@@ -20,7 +22,12 @@ async function notion(path, body) {
     },
     body: body ? JSON.stringify(body) : undefined,
   });
-  if (!res.ok) throw new Error(`Notion API ${res.status}: ${await res.text()}`);
+  if (!res.ok) {
+    const body = await res.text();
+    if (res.status === 401) fail("Notion key rejected", "NOTION_TOKEN is not a valid Notion integration secret. Copy it again from notion.so/profile/integrations.");
+    if (res.status === 404) fail("Timeline not shared", "The Notion integration cannot see Awan V1 Timeline. In Notion open the database → ••• → Connections → add the integration (also add it to User Stories).");
+    fail(`Notion API ${res.status}`, body.replace(/\s+/g, " ").slice(0, 300));
+  }
   return res.json();
 }
 
