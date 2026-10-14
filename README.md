@@ -34,3 +34,7 @@ Everything is edited in Notion, not here:
 ## Refresh now
 
 The site updates by itself every 30 minutes. To update it straight away, open **Actions → Update status site → Run workflow**.
+
+## Notion access
+
+The "Awan status site" connection must be added to both **Awan Business Docs** (timeline) and **Awan Development Docs** (user stories, for progress). If progress shows 0%, check the second one.
