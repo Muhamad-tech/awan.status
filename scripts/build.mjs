@@ -139,6 +139,13 @@ const counted = milestones.filter((m) => m.stories);
 const total = counted.reduce((n, m) => n + m.stories, 0);
 const done = Math.round(counted.reduce((n, m) => n + (m.progress || 0) * m.stories, 0));
 
+if (!total) {
+  console.log(
+    "::warning title=Progress is missing::No user stories are linked, so progress shows 0%. " +
+      "In Notion, open Awan Development Docs → ••• → Connections and add 'Awan status site', then run this again."
+  );
+}
+
 const data = {
   generatedAt: new Date().toISOString(),
   project: {
