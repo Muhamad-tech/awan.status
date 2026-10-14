@@ -2,6 +2,8 @@
 
 A small website where the client follows the Awan Version 1 plan without opening Notion.
 
+**Site:** https://muhamad-tech.github.io/awan.status/
+
 - **Source:** the "Awan V1 Timeline" database in Notion. Progress comes from the User Stories (a story marked Done moves the bars).
 - **Refresh:** GitHub Actions reads Notion every 30 minutes and republishes the page. Use **Actions → Update status site → Run workflow** for an instant refresh.
 - **What is public:** only timeline rows ticked **Client sees**, plus progress per feature. Team names, team notes, prices and GitHub issues are not published.
