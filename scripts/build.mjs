@@ -25,7 +25,19 @@ async function notion(path, body) {
   if (!res.ok) {
     const body = await res.text();
     if (res.status === 401) fail("Notion key rejected", "NOTION_TOKEN is not a valid Notion integration secret. Copy it again from notion.so/profile/integrations.");
-    if (res.status === 404) fail("Timeline not shared", "The Notion integration cannot see Awan V1 Timeline. In Notion open the database → ••• → Connections → add the integration (also add it to User Stories).");
+    if (res.status === 404) {
+      // Say which integration the key belongs to and how much it can see (no page names: the repo is public).
+      let who = "unknown integration";
+      let seen = "unknown";
+      try {
+        const h = { Authorization: `Bearer ${TOKEN}`, "Notion-Version": "2025-09-03", "Content-Type": "application/json" };
+        const me = await (await fetch("https://api.notion.com/v1/users/me", { headers: h })).json();
+        who = `"${me.name}" in workspace "${me.bot?.workspace_name}"`;
+        const sr = await (await fetch("https://api.notion.com/v1/search", { method: "POST", headers: h, body: JSON.stringify({ page_size: 100 }) })).json();
+        seen = String(sr.results?.length ?? 0);
+      } catch {}
+      fail("Timeline not shared", `The key belongs to ${who}. It can see ${seen} pages or databases, and Awan V1 Timeline is not one of them. Add this integration to Awan V1 Timeline and User Stories (••• → Connections), or check that the GitHub secret holds this integration's key.`);
+    }
     fail(`Notion API ${res.status}`, body.replace(/\s+/g, " ").slice(0, 300));
   }
   return res.json();
