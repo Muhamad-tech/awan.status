@@ -30,3 +30,7 @@ Everything is edited in Notion, not here:
 - `scripts/build.mjs` reads Notion and writes `site/data.json`.
 - `site/index.html` draws the page from `data.json`.
 - `.github/workflows/status-site.yml` runs both every 30 minutes and publishes to GitHub Pages.
+
+## Refresh now
+
+The site updates by itself every 30 minutes. To update it straight away, open **Actions → Update status site → Run workflow**.
